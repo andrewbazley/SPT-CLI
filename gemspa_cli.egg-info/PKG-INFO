@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: gemspa-cli
+Version: 0.1.0
+Summary: Command-line interface for GEMspa single-particle tracking analysis
+Home-page: https://github.com/yourusername/gemspa_cli
+Author: Your Name
+Author-email: your.email@example.com
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/plain
