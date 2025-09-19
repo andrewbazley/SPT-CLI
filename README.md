@@ -95,6 +95,67 @@ gemspa-cli   --work-dir /path/to/data   --n-jobs 4   --rainbow-tracks   --rainbo
    ├── MAX_Tg_001.tif          (optional)
    └── MAX_Tg_002.tif          (optional)
 
+## Using TrackMate outputs
+
+GEMspa can ingest TrackMate’s **“Spots in tracks”** CSV exports with a simple header map.
+
+**Export from TrackMate**
+- In Fiji/TrackMate, export the table **Spots in tracks** as CSV.
+
+**Header mapping (case‑insensitive)**
+- `TRACK_ID` → `track_id`
+- `FRAME` → `frame`
+- `POSITION_X` → `x`
+- `POSITION_Y` → `y`
+
+Extra columns are ignored. Delimiter can be comma or tab.
+
+**Units**
+- GEMspa assumes `x, y` are in **pixels** and converts using `--micron-per-px`.
+- If your TrackMate export is already in **microns**, run with `--micron-per-px 1.0` (or convert back to pixels).
+
+**File names / discovery**
+- **Option A (no renaming needed, if your CLI supports `--csv-pattern`)**  
+  Use a glob that matches your TrackMate files:
+  ```bash
+  gemspa-cli     --work-dir /path/to/folder     --csv-pattern "*Spots in tracks*.csv"     --micron-per-px 1.0     --n-jobs 4
+  ```
+- **Option B (rename or batch‑convert to `Traj_<condition>_<rep>.csv`)**  
+  If your CLI doesn’t have `--csv-pattern`, either rename files or run this quick Python helper in the folder with TrackMate CSVs:
+  ```python
+  import pandas as pd, glob, os, re
+  for f in glob.glob("*.csv"):
+      df = pd.read_csv(f)
+      # normalize headers to lower
+      df.columns = [c.lower() for c in df.columns]
+      rename = {}
+      for src, dest in [('track_id','track_id'), ('trajectory','track_id'),
+                        ('frame','frame'),
+                        ('position_x','x'), ('x','x'),
+                        ('position_y','y'), ('y','y')]:
+          if src in df.columns: rename[src] = dest
+      df = df.rename(columns=rename)
+      req = {'track_id','frame','x','y'}
+      if not req.issubset(set(df.columns)): 
+          print("Skip", f, "missing", req - set(df.columns)); 
+          continue
+      stem = os.path.splitext(os.path.basename(f))[0]
+      m = re.match(r"(.*)_(\d+)$", stem)
+      condition, rep = (m.group(1), m.group(2)) if m else ("COND", "001")
+      out = f"Traj_{condition}_{rep}.csv"
+      df.to_csv(out, index=False)
+      print("Wrote", out)
+  ```
+
+**Example folder** (after Option B conversion)
+```
+/data/spa_runs/
+├── Traj_DMSO_001.csv
+├── Traj_DMSO_002.csv
+├── Traj_Tg_001.csv
+└── Traj_Tg_002.csv
+```
+
 ## CLI Usage
 
 
