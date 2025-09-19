@@ -286,6 +286,9 @@ python GEMspa-CLI.py -d /data/spa_runs --filter-D-min 0.005 --filter-D-max 1.0  
 ## Outputs & Interpretation
 
 ---------------------------
+- **msd_vs_tau.png** and **msd_vs_tau_loglog.png**: per‑replicate ensemble MSD vs τ (linear) and log‑log plots.
+- **grouped_raw/ensemble_msd_vs_tau_<condition>.png** and **grouped_raw/ensemble_msd_vs_tau_loglog_<condition>.png**: raw ensemble MSD vs τ plots per condition.
+- **grouped_filtered/ensemble_msd_vs_tau_<condition>.png** and **grouped_filtered/ensemble_msd_vs_tau_loglog_<condition>.png**: filtered ensemble MSD vs τ plots per condition.
 - msd_results.csv: per-track diffusion (D), anomalous exponent (α), fit quality (R²).
 - D_fit_distribution.png: shows spread of diffusion coefficients on log scale.
 - alpha_vs_logD.png: relation between α and D across tracks.
@@ -310,6 +313,9 @@ python GEMspa-CLI.py -d /data/spa_runs --filter-D-min 0.005 --filter-D-max 1.0  
     • D_fit_distribution.png: log‑spaced histogram of D (μm²/s).
     • alpha_vs_logD.png: scatter of α vs. log10(D).
   - Optionally overlays colored tracks on the MAX_*.tif image using a rainbow colormap.
+- **New:** saves *per‑file* ensemble MSD plots:
+  • `msd_vs_tau.png` (linear) and `msd_vs_tau_loglog.png` (log‑log).
+
 
 2.2 msd_diffusion.py
 - Core MSD computation and fitting utilities:
@@ -339,6 +345,10 @@ python GEMspa-CLI.py -d /data/spa_runs --filter-D-min 0.005 --filter-D-max 1.0  
   - Groups folders named <condition>_<rep> and concatenates their msd_results.csv.
   - Writes grouped_raw/msd_results.csv and grouped_filtered/msd_results.csv.
   - Generates the same distribution & scatter plots for raw and filtered ensembles.
+- **New:** computes and saves *per‑condition ensemble* MSD vs τ plots in both raw and filtered folders:
+  `grouped_raw/ensemble_msd_vs_tau_<condition>.png`, `grouped_raw/ensemble_msd_vs_tau_loglog_<condition>.png`,
+  `grouped_filtered/ensemble_msd_vs_tau_<condition>.png`, `grouped_filtered/ensemble_msd_vs_tau_loglog_<condition>.png`.
+
 
 2.6 compare_conditions.py
 - Cross-condition comparison on filtered ensemble data:
