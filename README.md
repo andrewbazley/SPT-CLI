@@ -2,12 +2,44 @@ GEMspa Analysis Pipeline Guide
 Command Line Interface based on the GEMspa analysis pipeline originally written by Sarah Keegan
 https://www.biorxiv.org/content/10.1101/2023.06.26.546612v1
 
-Quickrun
+**Requirements**
+```
+numpy>=1.21.0,<1.25.0
+pandas>=1.3.0,<2.0.0
+scipy>=1.7.0,<2.0.0
+matplotlib>=3.4.0,<4.0.0
+seaborn>=0.11.0,<1.3.0
+scikit-image>=0.19.0,<0.21.0
+tifffile>=2020.12.8,<2022.0.0
+nd2reader>=3.0.0,<4.0.0
+joblib>=1.2.0,<2.0.0
+numba>=0.55.0,<0.60.0
+```
+
+
+Overview
+Create and activate a virtual environment, install required dependencies, and set the working directory to the analysis folder.
+
 cd /Users/andrewbazley/Desktop/GEMspa-CLI
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 pip install -e .
  ./venv/bin/GEMspa-CLI.py --work-dir "/Users/andrewbazley/Desktop/20250716 RLTPSC ER GEM"
+
+Then you can run the GEMspa-CLI.py script, which executes the analysis with the following arguments/parameters
+```
+pip install -e .
+gemspa-cli \
+  --work-dir /path/to/data \
+  --n-jobs 4 \
+  --rainbow-tracks \
+  --rainbow-min-D 0 \
+  --rainbow-max-D 2 \
+  --rainbow-colormap plasma \
+  --rainbow-scale 2 \
+  --rainbow-dpi 300 \
+  --step-size-analysis
+```
 
 1. Introduction
 This document describes the components of the GEMspa single-particle tracking (SPT) analysis pipeline, explains what each script does, and shows how to run the entire analysis from the CLI. It also explains the outputs generated and their interpretation.
@@ -58,6 +90,8 @@ Command-line entry point gluing everything together:
 - Runs trajectory_analysis, exports step sizes, runs step_size_analysis if requested.
 - After replicates, runs ensemble_analysis and compare_conditions.
 - Arguments control filtering, rainbow parameters, and parallelism.
+
+
 3. CLI Usage
 From your activated virtual environment, install and run:
 ```
